@@ -1,17 +1,48 @@
 require 'em-websocket'
-def mousepress(msg)
+def mousedown(msg)
   x=msg.split(' ').last.split('&').first.to_i
   y=msg.split(' ').last.split('&').last.to_i
-  puts x
-  puts y
+  system("./osxautomation \"mousewarp #{x} #{y}\"");
+  system("./osxautomation \"mousedown 1\"");
+end
+def mouserightclick(msg)
+  x=msg.split(' ').last.split('&').first.to_i
+  y=msg.split(' ').last.split('&').last.to_i
+  system("./osxautomation \"mousewarp #{x} #{y}\"");
+  system("./osxautomation \"mouseclick 2\"");
+end
+def mousedoubleclick(msg)
+  x=msg.split(' ').last.split('&').first.to_i
+  y=msg.split(' ').last.split('&').last.to_i
+  system("./osxautomation \"mousewarp #{x} #{y}\"");
+  system("./osxautomation \"mousedoubleclick 1\"");
+end
+def mouseclick(msg)
+  x=msg.split(' ').last.split('&').first.to_i
+  y=msg.split(' ').last.split('&').last.to_i
   system("./osxautomation \"mousewarp #{x} #{y}\"");
   system("./osxautomation \"mouseclick 1\"");
 end
-def mouserelease(msg)
+def mousedrag(msg)
+  x=msg.split(' ').last.split('&').first.to_i
+  y=msg.split(' ').last.split('&').last.to_i
+  system("./osxautomation \"mousedrag #{x} #{y}\"");
+  system("./osxautomation \"mouseup #{x} #{y}\"");
+end
+def mouseup(msg)
   system("./osxautomation \"mouseup 1\"");
 end
+def mousescrollx(msg)
+  length = msg.split(' ').last;
+  system("./osxautomation \"mouseScrollX #{length}\"");
+end
+def mousescrolly(msg)
+  length = msg.split(' ').last;
+  system("./osxautomation \"mouseScrollY #{length}\"");
+end
 def keypress(msg)
-  key = msg.split(' ').last
+  puts msg;
+  key = msg.gsub('keypress ', '').gsub('true', '1').gsub('false', '0')
   system("./osxautomation \"hit #{key}\"")
 end
 def keyrelease(msg)
@@ -38,10 +69,22 @@ EM.run {
         keypress(msg)
       when "keyrelease"
         keyrelease(msg)
-      when "mousepress"
-        mousepress(msg)
-      when "mouserelease"
-        mouserelease(msg)
+      when "mouseup"
+        mouseup(msg)
+      when "mouseclick"
+        mouseclick(msg)
+      when "mousedoubleclick"
+        mousedoubleclick(msg)
+      when "mouserightclick"
+        mouserightclick(msg)
+      when "mousedown"
+        mousedown(msg)
+      when "mousedrag"
+        mousedrag(msg)
+      when "mouseScrollX"
+        mousescrollx(msg)
+      when "mouseScrollY"
+        mousescrolly(msg)
       end
       #ws.send "Pong: #{msg}"
     }
