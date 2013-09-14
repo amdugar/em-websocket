@@ -2,35 +2,31 @@ require 'em-websocket'
 def mousedown(msg)
   x=msg.split(' ').last.split('&').first.to_i
   y=msg.split(' ').last.split('&').last.to_i
-  system("./osxautomation \"mousewarp #{x} #{y}\"");
-  system("./osxautomation \"mousedown 1\"");
+  button = msg.split(' ')[1]
+  system("./osxautomation \"mousewarp #{x} #{y}\" \"mousedown #{button}\"");
 end
 def mouserightclick(msg)
   x=msg.split(' ').last.split('&').first.to_i
   y=msg.split(' ').last.split('&').last.to_i
-  system("./osxautomation \"mousewarp #{x} #{y}\"");
-  system("./osxautomation \"mouseclick 2\"");
+  system("./osxautomation \"mousewarp #{x} #{y}\" \"mouseclick 2\"");
 end
 def mousedoubleclick(msg)
   x=msg.split(' ').last.split('&').first.to_i
   y=msg.split(' ').last.split('&').last.to_i
-  system("./osxautomation \"mousewarp #{x} #{y}\"");
-  system("./osxautomation \"mousedoubleclick 1\"");
+  system("./osxautomation \"mousewarp #{x} #{y}\" \"mousedoubleclick 1\"");
 end
 def mouseclick(msg)
   x=msg.split(' ').last.split('&').first.to_i
   y=msg.split(' ').last.split('&').last.to_i
-  system("./osxautomation \"mousewarp #{x} #{y}\"");
-  system("./osxautomation \"mouseclick 1\"");
+  system("./osxautomation \"mousewarp #{x} #{y}\" \"mouseclick 1\"");
 end
 def mousedrag(msg)
   x=msg.split(' ').last.split('&').first.to_i
   y=msg.split(' ').last.split('&').last.to_i
-  system("./osxautomation \"mousedrag #{x} #{y}\"");
-  system("./osxautomation \"mouseup #{x} #{y}\"");
+  system("./osxautomation \"mousedrag #{x} #{y}\" \"mouseup 1\"");
 end
 def mouseup(msg)
-  system("./osxautomation \"mouseup 1\"");
+  system("./osxautomation \"mouseup 1\" \"mouseup 2\"");
 end
 def mousescrollx(msg)
   length = msg.split(' ').last;
@@ -44,12 +40,13 @@ def keypress(msg)
   puts msg;
   key = msg.gsub('keypress ', '').gsub('true', '1').gsub('false', '0')
   system("./osxautomation \"hit #{key}\"")
+  #system("./osxautomation \"unicode #{key}\"")
 end
 def keyrelease(msg)
   key = msg.split(' ').last;
 end
 EM.run {
-  EM::WebSocket.run(:host => "0.0.0.0", :port => 8080) do |ws|
+  EM::WebSocket.run(:host => "0.0.0.0", :port => 9000) do |ws|
     ws.onopen { |handshake|
       puts "WebSocket connection open"
 
